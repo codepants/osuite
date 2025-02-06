@@ -4,8 +4,8 @@ Rails.application.config.after_initialize do
       User.create!(
         email: 'me@me.com',
         password: 'password',
-        password_confirmation: 'password',
-        name: 'Admin User',
+        password_digest: BCrypt::Password.create("password"),
+        name: 'me',
         admin: true
       )
     end
