@@ -2,7 +2,10 @@
   <div class="note-header">
     <h3><%= link_to note.title, note_path(note) %></h3>
     <div class="note-meta">
-      <span class="note-date"><%= time_ago_in_words(note.updated_at) %> ago</span>
+      <span class="note-date">
+        <span class="jp">更新：<%= time_ago_in_words(note.updated_at) %>前</span>
+        <span class="en-sub">Updated: <%= time_ago_in_words(note.updated_at) %> ago</span>
+      </span>
     </div>
   </div>
   
@@ -14,7 +17,7 @@
 <style>
 .note-card {
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 1rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -44,7 +47,7 @@
 }
 
 .note-header h3 a:hover {
-  color: #4a90e2;
+  color: #67c23a;
 }
 
 .note-meta {
@@ -56,5 +59,35 @@
   color: #666;
   font-size: 0.9375rem;
   line-height: 1.5;
+}
+
+.jp {
+  display: inline-block;
+}
+
+.en-sub {
+  display: inline-block;
+  font-size: 10px;
+  color: #666;
+  margin-left: 4px;
+  vertical-align: top;
+}
+
+body[data-language="JP"] .en-sub {
+  display: none;
+}
+
+body[data-language="JPE"] .en-sub {
+  display: inline-block;
+}
+
+body[data-language="ENG"] .jp {
+  display: none;
+}
+
+body[data-language="ENG"] .en-sub {
+  font-size: inherit;
+  color: inherit;
+  margin-left: 0;
 }
 </style> 

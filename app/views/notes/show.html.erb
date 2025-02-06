@@ -1,0 +1,166 @@
+<div class="note-container">
+  <div class="header">
+    <h2>
+      <span class="jp">備考詳細</span>
+      <span class="en-sub">Note Details</span>
+    </h2>
+    <%= link_to notes_path, class: 'back-button' do %>
+      <span class="jp">一覧に戻る</span>
+      <span class="en-sub">Back to List</span>
+    <% end %>
+  </div>
+
+  <div class="note-details">
+    <div class="note-header">
+      <h1><%= @note.title %></h1>
+      <div class="note-meta">
+        <span class="timestamp">
+          <span class="jp">更新：<%= l @note.updated_at, format: :long %></span>
+          <span class="en-sub">Updated: <%= @note.updated_at.strftime("%B %d, %Y %H:%M") %></span>
+        </span>
+      </div>
+    </div>
+
+    <div class="note-content">
+      <%= @note.content %>
+    </div>
+
+    <div class="note-actions">
+      <%= link_to edit_note_path(@note), class: 'edit-button' do %>
+        <span class="jp">編集</span>
+        <span class="en-sub">Edit</span>
+      <% end %>
+      <%= button_to note_path(@note), method: :delete, class: 'delete-button', data: { confirm: t('.confirm_delete') } do %>
+        <span class="jp">削除</span>
+        <span class="en-sub">Delete</span>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<style>
+.note-container {
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.back-button {
+  background-color: #909399;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  filter: brightness(110%);
+}
+
+.note-details {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.note-header {
+  margin-bottom: 2rem;
+}
+
+.note-header h1 {
+  margin: 0 0 1rem 0;
+  font-size: 1.75rem;
+  color: #333;
+}
+
+.note-meta {
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.note-content {
+  margin-bottom: 2rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+.note-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.edit-button {
+  background-color: #67c23a;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.edit-button:hover {
+  filter: brightness(110%);
+}
+
+.delete-button {
+  background-color: #f56c6c;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.delete-button:hover {
+  filter: brightness(110%);
+}
+
+.jp {
+  display: inline-block;
+}
+
+.en-sub {
+  display: inline-block;
+  font-size: 10px;
+  color: #666;
+  margin-left: 4px;
+  vertical-align: top;
+}
+
+body[data-language="JP"] .en-sub {
+  display: none;
+}
+
+body[data-language="JPE"] .en-sub {
+  display: inline-block;
+}
+
+body[data-language="ENG"] .jp {
+  display: none;
+}
+
+body[data-language="ENG"] .en-sub {
+  font-size: inherit;
+  color: inherit;
+  margin-left: 0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const savedLanguage = localStorage.getItem('language') || 'JPE';
+  document.body.setAttribute('data-language', savedLanguage);
+});
+</script> 

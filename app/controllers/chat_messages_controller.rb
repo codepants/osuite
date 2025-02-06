@@ -5,11 +5,19 @@ class ChatMessagesController < ApplicationController
 
   def create
     @message = current_user.chat_messages.build(message_params)
-    if @message.save
-      # Broadcast handled by model
-      head :ok
-    else
-      render json: { error: @message.errors.full_messages }, status: :unprocessable_entity
+    
+    respond_to do |format|
+      if @message.save
+        format.turbo_stream
+        format.html { redirect_to chat_messages_path }
+        format.json { head :ok }
+      else
+        format.html { 
+          flash[:alert] = @message.errors.full_messages.join(", ")
+          redirect_to chat_messages_path
+        }
+        format.json { render json: { error: @message.errors.full_messages }, status: :unprocessable_entity }
+      end
     end
   end
 

@@ -1,70 +1,219 @@
 <div class="dashboard-container">
   <% if current_user %>
-    <h1>Welcome, <%= current_user.name %></h1>
-    
-    <div class="dashboard-grid">
-      <div class="dashboard-section">
-        <h2>Recent Notes</h2>
-        <% if @recent_notes.any? %>
-          <ul class="dashboard-list">
-            <% @recent_notes.each do |note| %>
-              <li><%= link_to note.title, note_path(note) %></li>
-            <% end %>
-          </ul>
-        <% else %>
-          <p>No notes yet. <%= link_to 'Create one', new_note_path %>?</p>
-        <% end %>
-      </div>
-
-      <div class="dashboard-section">
-        <h2>Pending Tasks</h2>
-        <% if @pending_tasks.any? %>
-          <ul class="dashboard-list">
-            <% @pending_tasks.each do |task| %>
-              <li><%= link_to task.title, task_path(task) %></li>
-            <% end %>
-          </ul>
-        <% else %>
-          <p>No pending tasks. <%= link_to 'Create one', new_task_path %>?</p>
-        <% end %>
-      </div>
-
-      <div class="dashboard-section">
-        <h2>Recent Wiki Pages</h2>
-        <% if @recent_wiki_pages.any? %>
-          <ul class="dashboard-list">
-            <% @recent_wiki_pages.each do |page| %>
-              <li><%= link_to page.title, wiki_page_path(page) %></li>
-            <% end %>
-          </ul>
-        <% else %>
-          <p>No wiki pages yet. <%= link_to 'Create one', new_wiki_page_path %>?</p>
-        <% end %>
-      </div>
-    </div>
+    <h1>
+      <span class="jp">ようこそ、</span>
+      <span class="en-sub">Welcome,</span>
+      <%= current_user.name %>
+    </h1>
   <% else %>
     <div class="welcome-section">
-      <h1>Welcome to OSuite</h1>
+      <h1>
+        <span class="jp">OSuiteへようこそ</span>
+        <span class="en-sub">Welcome to OSuite</span>
+      </h1>
       
       <div class="intro-text">
         <p>
-          OSuite is your comprehensive workspace solution, bringing together essential tools 
-          for collaboration and productivity. With integrated note-taking, task management, 
-          and wiki functionality, it's designed to streamline your team's workflow and 
-          enhance communication.
+          <span class="jp">
+            OSuiteは、コラボレーションと生産性向上のための包括的なワークスペースソリューションです。
+            メモ作成、タスク管理、Wiki機能を統合し、チームのワークフローを効率化し、コミュニケーションを強化します。
+          </span>
+          <span class="en-sub">
+            OSuite is your comprehensive workspace solution, bringing together essential tools 
+            for collaboration and productivity. With integrated note-taking, task management, 
+            and wiki functionality, it's designed to streamline your team's workflow and 
+            enhance communication.
+          </span>
         </p>
 
         <p>
-          Whether you're documenting ideas, managing projects, or building a knowledge base, 
-          OSuite provides the tools you need in one unified platform. Experience the power 
-          of seamless integration and real-time collaboration with our intuitive interface 
-          and robust feature set.
+          <span class="jp">
+            OSuiteは、コラボレーションと生産性向上のための包括的なワークスペースソリューションです。
+            メモ作成、タスク管理、Wiki機能を統合し、チームのワークフローを効率化し、コミュニケーションを強化します。
+          </span>
+          <span class="en-sub">
+            Whether you're documenting ideas, managing projects, or building a knowledge base, 
+            OSuite provides the tools you need in one unified platform. Experience the power 
+            of seamless integration and real-time collaboration with our intuitive interface 
+            and robust feature set.
+          </span>
         </p>
       </div>
 
       <div class="login-prompt">
-        <%= link_to 'Login to Get Started', login_path, class: 'button primary' %>
+        <%= link_to login_path, class: 'button primary' do %>
+          <span class="jp">ログインして始める</span>
+          <span class="en-sub">Login to Get Started</span>
+        <% end %>
       </div>
     </div>
   <% end %>
-</div> 
+</div>
+
+<div class="dashboard-container">
+  <div class="dashboard-box notes-box">
+    <h2>
+      <span class="jp">最近の備考</span>
+      <span class="en-sub">Recent Notes</span>
+    </h2>
+    <div class="items-list">
+      <% @recent_notes.each do |note| %>
+        <div class="item-card note-card">
+          <%= link_to note_path(note), class: 'content-link' do %>
+            <%= note.title %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="dashboard-box tasks-box">
+    <h2>
+      <span class="jp">未完了の課題</span>
+      <span class="en-sub">Pending Tasks</span>
+    </h2>
+    <div class="items-list">
+      <% @pending_tasks.each do |task| %>
+        <div class="item-card task-card">
+          <%= link_to task_path(task), class: 'content-link' do %>
+            <%= task.title %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="dashboard-box wiki-box">
+    <h2>
+      <span class="jp">最新の知識</span>
+      <span class="en-sub">Recent Wiki Pages</span>
+    </h2>
+    <div class="items-list">
+      <% @recent_wiki_pages.each do |page| %>
+        <div class="item-card wiki-card">
+          <%= link_to wiki_page_path(page), class: 'content-link' do %>
+            <%= page.title %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<style>
+.dashboard-container {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  justify-content: space-between;
+}
+
+.dashboard-box {
+  width: 30vw;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-box h2 {
+  margin: 0 0 1.5rem 0;
+  font-size: 1.25rem;
+  color: #333;
+}
+
+.notes-box {
+  background-color: #f8f9fa;
+}
+
+.tasks-box {
+  background-color: #fafafa;
+}
+
+.wiki-box {
+  background-color: #f5f5f5;
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.item-card {
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+}
+
+.item-card a {
+  text-decoration: none;
+  display: block;
+}
+
+.note-card {
+  background-color: #67c23a;
+}
+
+.note-card a {
+  color: white;
+}
+
+.task-card {
+  background-color: #ffa700;  /* Pale yellow */
+}
+
+.task-card a {
+  color: white;
+}
+
+.wiki-card {
+  background-color: #f56c6c;  /* Pink */
+}
+
+.wiki-card a {
+  color: white;
+}
+
+.content-link {
+  text-decoration: none;
+  color: white;
+  display: block;
+}
+
+.jp {
+  display: inline-block;
+}
+
+.en-sub {
+  display: inline-block;
+  font-size: 10px;
+  color: #666;
+  margin-left: 4px;
+  vertical-align: super;
+}
+
+body[data-language="JP"] .en-sub {
+  display: none;
+}
+
+body[data-language="JPE"] .en-sub {
+  display: inline-block;
+}
+
+body[data-language="ENG"] .jp {
+  display: none;
+}
+
+body[data-language="ENG"] .en-sub {
+  font-size: inherit;
+  color: inherit;
+  margin-left: 0;
+  vertical-align: baseline;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const savedLanguage = localStorage.getItem('language') || 'JPE';
+  document.body.setAttribute('data-language', savedLanguage);
+});
+</script> 

@@ -1,0 +1,147 @@
+<div class="simplebase-container">
+  <h2>
+    <span class="jp">新規データベース作成</span>
+    <span class="en-sub">New Database</span>
+  </h2>
+
+  <%= form_with(model: @simplebase_table, local: true, class: 'simplebase-form') do |f| %>
+    <% if @simplebase_table.errors.any? %>
+      <div class="error-messages">
+        <h3>
+          <span class="jp"><%= pluralize(@simplebase_table.errors.count, '件') %>のエラーが発生しました：</span>
+          <span class="en-sub"><%= pluralize(@simplebase_table.errors.count, 'error') %> prohibited this table from being saved:</span>
+        </h3>
+        <ul>
+          <% @simplebase_table.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :name do %>
+        <span class="jp">データベース名</span>
+        <span class="en-sub">Database Name</span>
+      <% end %>
+      <%= f.text_field :name, class: 'form-input' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :description do %>
+        <span class="jp">説明</span>
+        <span class="en-sub">Description</span>
+      <% end %>
+      <%= f.text_area :description, class: 'form-input' %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit class: 'save-button' do %>
+        <span class="jp">作成</span>
+        <span class="en-sub">Create</span>
+      <% end %>
+      <%= link_to simplebase_tables_path, class: 'cancel-button' do %>
+        <span class="jp">取消</span>
+        <span class="en-sub">Cancel</span>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+.simplebase-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #f8f9fa;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.simplebase-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.save-button {
+  background-color: #67c23a;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.cancel-button {
+  background-color: #909399;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.jp {
+  display: inline-block;
+}
+
+.en-sub {
+  display: inline-block;
+  font-size: 10px;
+  color: #666;
+  margin-left: 4px;
+  vertical-align: super;
+}
+
+body[data-language="JP"] .en-sub {
+  display: none;
+}
+
+body[data-language="JPE"] .en-sub {
+  display: inline-block;
+}
+
+body[data-language="ENG"] .jp {
+  display: none;
+}
+
+body[data-language="ENG"] .en-sub {
+  font-size: inherit;
+  color: inherit;
+  margin-left: 0;
+  vertical-align: baseline;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const savedLanguage = localStorage.getItem('language') || 'JPE';
+  document.body.setAttribute('data-language', savedLanguage);
+});
+</script> 

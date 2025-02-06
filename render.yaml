@@ -1,7 +1,0 @@
-# render.yaml
-services:
-  - type: web
-    name: myapp
-    env: ruby
-    buildCommand: bundle install
-    startCommand: bundle exec rails db:migrate && bundle exec rails server

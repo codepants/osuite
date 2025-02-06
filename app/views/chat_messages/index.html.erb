@@ -1,14 +1,157 @@
 <div class="chat-container">
-  <div class="messages" data-controller="chat-scroll">
-    <% @messages.each do |message| %>
-      <%= render 'message', message: message %>
+  <div class="header">
+    <h2>
+      <span class="jp">対話室</span>
+      <span class="en-sub">Chat Room</span>
+    </h2>
+  </div>
+
+  <div id="messages" class="messages-list">
+    <% @messages.reverse.each do |message| %>
+      <%= render partial: 'message', locals: { message: message } %>
     <% end %>
   </div>
 
-  <%= form_with(model: ChatMessage.new, class: 'message-form') do |f| %>
-    <%= f.text_area :content, placeholder: 'Type your message...', rows: 3 %>
-    <%= f.submit 'Send' %>
-  <% end %>
+  <div class="chat-input-container">
+    <%= form_with(model: ChatMessage.new, local: false, class: 'chat-form', id: 'chat-form') do |f| %>
+      <%= f.text_field :content, 
+          class: 'chat-input',
+          autocomplete: 'off',
+          data: { 
+            controller: 'chat',
+            action: 'keypress->chat#onKeyPress'
+          } %>
+      <button type="submit" class="send-button">
+        <span class="jp">送信</span>
+        <span class="en-sub">Send</span>
+      </button>
+    <% end %>
+  </div>
 </div>
+
+<style>
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 120px);
+  padding: 2rem;
+}
+
+.header {
+  margin-bottom: 1rem;
+}
+
+.messages-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1rem;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin-bottom: 1rem;
+}
+
+.chat-input-container {
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.chat-form {
+  display: flex;
+  gap: 1rem;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.chat-input:focus {
+  border-color: #409eff;
+}
+
+.send-button {
+  background-color: #409eff;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.send-button:hover {
+  filter: brightness(110%);
+}
+
+.jp {
+  display: inline-block;
+}
+
+.en-sub {
+  display: inline-block;
+  font-size: 10px;
+  color: #666;
+  margin-left: 4px;
+  vertical-align: top;
+}
+
+body[data-language="JP"] .en-sub {
+  display: none;
+}
+
+body[data-language="JPE"] .en-sub {
+  display: inline-block;
+}
+
+body[data-language="ENG"] .jp {
+  display: none;
+}
+
+body[data-language="ENG"] .en-sub {
+  font-size: inherit;
+  color: inherit;
+  margin-left: 0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const savedLanguage = localStorage.getItem('language') || 'JPE';
+  document.body.setAttribute('data-language', savedLanguage);
+
+  const messagesList = document.getElementById('messages');
+  messagesList.scrollTop = messagesList.scrollHeight;
+
+  const chatForm = document.getElementById('chat-form');
+  const chatInput = chatForm.querySelector('.chat-input');
+
+  chatForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    if (chatInput.value.trim()) {
+      this.submit();
+      chatInput.value = '';
+    }
+  });
+
+  chatInput.addEventListener('keypress', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (this.value.trim()) {
+        chatForm.submit();
+        this.value = '';
+      }
+    }
+  });
+});
+</script>
 
 <%= turbo_stream_from "chat_room" %> 

@@ -20,6 +20,19 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag "application" %>
     <%= javascript_importmap_tags %>
+
+    <style>
+      body {
+        background-color: #fff5e6;  /* Light dull orange */
+        min-height: 100vh;
+        margin: 0;
+        padding: 0;
+      }
+
+      main {
+        min-height: calc(100vh - 80px);  /* Adjust based on your nav height */
+      }
+    </style>
   </head>
 
   <body>
@@ -67,6 +80,8 @@
             <span class="jp">ユーザー：</span>
             <span class="en-sub">User:</span>
             <%= current_user.name %>
+          </span>
+          <span class="user-info">
             <%= '(管理者)' if current_user.admin? %>
           </span>
           <%= button_to logout_path, method: :delete, class: 'nav-tab logout-tab' do %>
@@ -115,7 +130,7 @@
 
         .dashboard-tab { background-color: #4a90e2; }
         .notes-tab { background-color: #67c23a; }
-        .tasks-tab { background-color: #e6a23c; }
+        .tasks-tab { background-color: #ffa700; color: #333; }
         .wiki-tab { background-color: #f56c6c; }
         .simplebase-tab { background-color: #909399; }
         .chat-tab { background-color: #9c27b0; }

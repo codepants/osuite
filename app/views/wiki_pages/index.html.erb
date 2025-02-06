@@ -1,25 +1,194 @@
-<h1>Wiki Pages</h1>
+<div class="wiki-container">
+  <div class="header">
+    <h2>
+      <span class="jp">知識庫</span>
+      <span class="en-sub">Wiki Pages</span>
+    </h2>
+    <%= render 'shared/new_button', text: '新規作成', onclick: "location.href='#{new_wiki_page_path}'" %>
+  </div>
 
-<%= link_to 'New Wiki Page', new_wiki_page_path, class: 'button' %>
+  <div class="search-form">
+    <%= form_with(url: search_wiki_pages_path, method: :get, local: true) do |f| %>
+      <div class="search-field">
+        <%= f.text_field :q, 
+            class: 'search-input',
+            placeholder: t('.search_placeholder') %>
+        <%= f.button type: 'submit', class: 'search-button' do %>
+          <span class="jp">検索</span>
+          <span class="en-sub">Search</span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
 
-<div class="search-form">
-  <%= form_with(url: search_wiki_pages_path, method: :get, local: true) do |f| %>
-    <%= f.text_field :q, placeholder: 'Search wiki pages...' %>
-    <%= f.submit 'Search' %>
-  <% end %>
+  <div class="wiki-pages-list">
+    <% @wiki_pages.each do |page| %>
+      <div class="wiki-page-card">
+        <div class="page-header">
+          <h3><%= link_to page.title, wiki_page_path(page) %></h3>
+          <div class="page-meta">
+            <div class="meta-info">
+              <span class="author-info">
+                <span class="jp">作成者</span>
+                <span class="en-sub">Created by</span>
+                <%= page.user.name %>
+              </span>
+              <span class="timestamp">
+                <span class="jp">更新：<%= time_ago_in_words(page.updated_at) %>前</span>
+                <span class="en-sub">Updated: <%= time_ago_in_words(page.updated_at) %> ago</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="page-preview">
+          <%= page.content.to_plain_text.truncate(200) if page.content.present? %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>
 
-<div class="wiki-pages-list">
-  <% @wiki_pages.each do |page| %>
-    <div class="wiki-page-card">
-      <h3><%= link_to page.title, wiki_page_path(page) %></h3>
-      <div class="page-preview">
-        <%= page.content.to_plain_text.truncate(100) %>
-      </div>
-      <div class="page-meta">
-        <span>By <%= page.user.name %></span>
-        <span><%= time_ago_in_words(page.updated_at) %> ago</span>
-      </div>
-    </div>
-  <% end %>
-</div> 
+<style>
+.wiki-container {
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.search-form {
+  margin-bottom: 2rem;
+}
+
+.search-field {
+  display: flex;
+  gap: 1rem;
+  max-width: 600px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: #f56c6c;
+}
+
+.search-button {
+  background-color: #f56c6c;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.search-button:hover {
+  filter: brightness(110%);
+}
+
+.wiki-page-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.wiki-page-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.page-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.page-header h3 a {
+  color: #333;
+  text-decoration: none;
+}
+
+.page-header h3 a:hover {
+  color: #f56c6c;
+}
+
+.page-meta {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.meta-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.author-info, .timestamp {
+  display: block;
+}
+
+.page-preview {
+  color: #666;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.jp {
+  display: inline-block;
+}
+
+.en-sub {
+  display: inline-block;
+  font-size: 10px;
+  color: #666;
+  margin-left: 4px;
+  vertical-align: top;
+}
+
+body[data-language="JP"] .en-sub {
+  display: none;
+}
+
+body[data-language="JPE"] .en-sub {
+  display: inline-block;
+}
+
+body[data-language="ENG"] .jp {
+  display: none;
+}
+
+body[data-language="ENG"] .en-sub {
+  font-size: inherit;
+  color: inherit;
+  margin-left: 0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const savedLanguage = localStorage.getItem('language') || 'JPE';
+  document.body.setAttribute('data-language', savedLanguage);
+});
+</script> 

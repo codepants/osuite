@@ -1,0 +1,256 @@
+<div class="wiki-container">
+  <div class="header">
+    <h2>
+      <span class="jp">知識庫</span>
+      <span class="en-sub">Wiki Page</span>
+    </h2>
+    <%= link_to wiki_pages_path, class: 'back-button' do %>
+      <span class="jp">一覧に戻る</span>
+      <span class="en-sub">Back to List</span>
+    <% end %>
+  </div>
+
+  <div class="wiki-details">
+    <div class="wiki-header">
+      <h1><%= @wiki_page.title %></h1>
+      <div class="wiki-meta">
+        <div class="meta-info">
+          <span class="author-info">
+            <span class="jp">作成者</span>
+            <span class="en-sub">Created by</span>
+            <%= @wiki_page.user.name %>
+          </span>
+          <span class="timestamp">
+            <span class="jp">更新：<%= l @wiki_page.updated_at, format: :long %></span>
+            <span class="en-sub">Updated: <%= @wiki_page.updated_at.strftime("%B %d, %Y %H:%M") %></span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <% if @wiki_page.parent %>
+      <div class="parent-link">
+        <span class="jp">親ページ：</span>
+        <span class="en-sub">Parent: </span>
+        <%= link_to @wiki_page.parent.title, wiki_page_path(@wiki_page.parent) %>
+      </div>
+    <% end %>
+
+    <div class="wiki-content">
+      <%= @wiki_page.content %>
+    </div>
+
+    <% if @wiki_page.children.any? %>
+      <div class="child-pages">
+        <h3>
+          <span class="jp">子ページ</span>
+          <span class="en-sub">Child Pages</span>
+        </h3>
+        <div class="children-list">
+          <% @wiki_page.children.order(:title).each do |child| %>
+            <div class="child-page">
+              <%= link_to child.title, wiki_page_path(child) %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="wiki-actions">
+      <%= link_to edit_wiki_page_path(@wiki_page), class: 'edit-button' do %>
+        <span class="jp">編集</span>
+        <span class="en-sub">Edit</span>
+      <% end %>
+      <%= button_to wiki_page_path(@wiki_page), method: :delete, class: 'delete-button', data: { confirm: t('.confirm_delete') } do %>
+        <span class="jp">削除</span>
+        <span class="en-sub">Delete</span>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<style>
+.wiki-container {
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.back-button {
+  background-color: #909399;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.back-button:hover {
+  filter: brightness(110%);
+}
+
+.wiki-details {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.wiki-header {
+  margin-bottom: 2rem;
+}
+
+.wiki-header h1 {
+  margin: 0 0 1rem 0;
+  font-size: 1.75rem;
+  color: #333;
+}
+
+.wiki-meta {
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.meta-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.author-info, .timestamp {
+  display: block;
+}
+
+.parent-link {
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.parent-link a {
+  color: #f56c6c;
+  text-decoration: none;
+}
+
+.parent-link a:hover {
+  text-decoration: underline;
+}
+
+.wiki-content {
+  margin-bottom: 2rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+.child-pages {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.child-pages h3 {
+  margin: 0 0 1rem 0;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.children-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.child-page {
+  padding: 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.child-page:hover {
+  background-color: #f0f0f0;
+}
+
+.child-page a {
+  color: #333;
+  text-decoration: none;
+  display: block;
+}
+
+.wiki-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.edit-button {
+  background-color: #f56c6c;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.edit-button:hover {
+  filter: brightness(110%);
+}
+
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.delete-button:hover {
+  filter: brightness(110%);
+}
+
+.jp {
+  display: inline-block;
+}
+
+.en-sub {
+  display: inline-block;
+  font-size: 10px;
+  color: #666;
+  margin-left: 4px;
+  vertical-align: top;
+}
+
+body[data-language="JP"] .en-sub {
+  display: none;
+}
+
+body[data-language="JPE"] .en-sub {
+  display: inline-block;
+}
+
+body[data-language="ENG"] .jp {
+  display: none;
+}
+
+body[data-language="ENG"] .en-sub {
+  font-size: inherit;
+  color: inherit;
+  margin-left: 0;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const savedLanguage = localStorage.getItem('language') || 'JPE';
+ 

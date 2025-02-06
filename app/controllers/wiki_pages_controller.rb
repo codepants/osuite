@@ -45,7 +45,7 @@ class WikiPagesController < ApplicationController
   private
 
   def set_wiki_page
-    @wiki_page = WikiPage.find_by!(slug: params[:id])
+    @wiki_page = WikiPage.find(params[:id])
   end
 
   def wiki_page_params

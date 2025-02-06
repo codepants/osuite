@@ -1,25 +1,67 @@
 <div class="simplebase-container">
   <div class="header">
-    <h2>SimpleBase Tables</h2>
-    <%= render 'shared/new_button', text: 'New Table', onclick: 'showNewTableForm()' %>
+    <h2>
+      <span class="jp">情報管理</span>
+      <span class="en-sub">SimpleBase</span>
+    </h2>
+    <%= render 'shared/new_button', text: '新規作成', onclick: 'showNewTableForm()' %>
   </div>
 
   <div id="new-table-form" style="display: none;" class="new-table-row">
     <%= form_with(model: SimplebaseTable.new, local: true, class: 'inline-form') do |f| %>
       <div class="form-fields">
-        <%= f.text_field :name, placeholder: 'Table name', class: 'form-input' %>
-        <%= f.text_area :description, placeholder: 'Description', class: 'form-input' %>
+        <div class="field">
+          <%= f.label :name do %>
+            <span class="jp">テーブル名</span>
+            <span class="en-sub">Table Name</span>
+          <% end %>
+          <%= f.text_field :name, class: 'form-input' %>
+        </div>
+
+        <div class="field">
+          <%= f.label :description do %>
+            <span class="jp">説明</span>
+            <span class="en-sub">Description</span>
+          <% end %>
+          <%= f.text_area :description, class: 'form-input' %>
+        </div>
       </div>
       <div class="form-actions">
-        <%= f.submit 'Save', class: 'save-button' %>
-        <button type="button" onclick="hideNewTableForm()" class="cancel-button">Cancel</button>
+        <%= f.submit class: 'save-button' do %>
+          <span class="jp">保存</span>
+          <span class="en-sub">Save</span>
+        <% end %>
+        <button type="button" onclick="hideNewTableForm()" class="cancel-button">
+          <span class="jp">取消</span>
+          <span class="en-sub">Cancel</span>
+        </button>
       </div>
     <% end %>
   </div>
 
   <div id="tables-list">
     <% @simplebase_tables.each do |table| %>
-      <%= render table %>
+      <div class="table-card">
+        <div class="table-header">
+          <h3><%= link_to table.name, simplebase_table_path(table) %></h3>
+          <div class="table-meta">
+            <div class="meta-info">
+              <span class="user-info">
+                <span class="jp">作成者</span>
+                <span class="en-sub">Created by</span>
+                <%= table.user&.name %>
+              </span>
+              <span class="timestamp">
+                <span class="jp">更新：<%= time_ago_in_words(table.updated_at) %>前</span>
+                <span class="en-sub">Updated: <%= time_ago_in_words(table.updated_at) %> ago</span>
+              </span>
+            </div>
+          </div>
+        </div>
+        <div class="table-description">
+          <%= table.description %>
+        </div>
+      </div>
     <% end %>
   </div>
 </div>
@@ -38,54 +80,157 @@
 
 .new-table-row {
   background-color: #f8f9fa;
-  padding: 1rem;
-  border-radius: 8px;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.table-card {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
   margin-bottom: 1rem;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.table-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.table-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.table-header h3 a {
+  color: #333;
+  text-decoration: none;
+}
+
+.table-header h3 a:hover {
+  color: #909399;
+}
+
+.table-meta {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.meta-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.user-info, .timestamp {
+  display: block;
+}
+
+.table-description {
+  color: #666;
+  font-size: 0.9375rem;
+  line-height: 1.5;
 }
 
 .inline-form {
   display: flex;
-  gap: 1rem;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .form-fields {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
-  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .form-input {
   width: 100%;
-  padding: 0.5rem;
+  padding: 0.75rem;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 8px;
   font-size: 1rem;
 }
 
 .form-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 1rem;
 }
 
 .save-button {
   background-color: #67c23a;
   color: white;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.save-button:hover {
+  filter: brightness(110%);
 }
 
 .cancel-button {
   background-color: #909399;
   color: white;
-  padding: 0.5rem 1rem;
+  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.cancel-button:hover {
+  filter: brightness(110%);
+}
+
+.jp {
+  display: inline-block;
+}
+
+.en-sub {
+  display: inline-block;
+  font-size: 10px;
+  color: #666;
+  margin-left: 4px;
+  vertical-align: top;
+}
+
+body[data-language="JP"] .en-sub {
+  display: none;
+}
+
+body[data-language="JPE"] .en-sub {
+  display: inline-block;
+}
+
+body[data-language="ENG"] .jp {
+  display: none;
+}
+
+body[data-language="ENG"] .en-sub {
+  font-size: inherit;
+  color: inherit;
+  margin-left: 0;
 }
 </style>
 
@@ -97,4 +242,9 @@ function showNewTableForm() {
 function hideNewTableForm() {
   document.getElementById('new-table-form').style.display = 'none';
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  const savedLanguage = localStorage.getItem('language') || 'JPE';
+  document.body.setAttribute('data-language', savedLanguage);
+});
 </script> 

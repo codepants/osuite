@@ -1,9 +1,76 @@
 <div class="message <%= 'current-user' if message.user == current_user %>">
-  <div class="message-header">
-    <span class="user-name"><%= message.user.name %></span>
-    <span class="timestamp"><%= time_ago_in_words(message.created_at) %> ago</span>
-  </div>
   <div class="message-content">
-    <%= message.content %>
+    <span class="user-name"><%= message.user.name %></span>
+    <span class="message-text"><%= message.content %></span>
+    <span class="timestamp">
+      <span class="jp"><%= time_ago_in_words(message.created_at) %>前</span>
+      <span class="en-sub"><%= time_ago_in_words(message.created_at) %> ago</span>
+    </span>
   </div>
-</div> 
+</div>
+
+<style>
+.message {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 12px;
+  background-color: #f8f9fa;
+}
+
+.message.current-user {
+  background-color: #ecf5ff;
+}
+
+.message-content {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #409eff;
+}
+
+.message-text {
+  color: #333;
+  flex: 1;
+  word-break: break-word;
+}
+
+.timestamp {
+  font-size: 0.75rem;
+  color: #909399;
+}
+
+.jp {
+  display: inline-block;
+}
+
+.en-sub {
+  display: inline-block;
+  font-size: 10px;
+  color: #666;
+  margin-left: 4px;
+  vertical-align: top;
+}
+
+body[data-language="JP"] .en-sub {
+  display: none;
+}
+
+body[data-language="JPE"] .en-sub {
+  display: inline-block;
+}
+
+body[data-language="ENG"] .jp {
+  display: none;
+}
+
+body[data-language="ENG"] .en-sub {
+  font-size: inherit;
+  color: inherit;
+  margin-left: 0;
+}
+</style> 
