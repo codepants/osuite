@@ -20,15 +20,17 @@ class TasksController < ApplicationController
   def create
     @task = current_user.tasks.build(task_params)
     if @task.save
-      redirect_to @task, notice: 'Task was successfully created.'
+      redirect_to tasks_path, notice: 'タスクが作成されました。'
     else
-      render :new, status: :unprocessable_entity
+      @tasks = current_user.tasks.includes(:user).order(updated_at: :desc)
+      flash.now[:alert] = 'タスクの作成に失敗しました。'
+      render :index, status: :unprocessable_entity
     end
   end
 
   def update
     if @task.update(task_params)
-      redirect_to @task, notice: 'Task was successfully updated.'
+      redirect_to tasks_path, notice: 'タスクが更新されました。'
     else
       render :edit, status: :unprocessable_entity
     end
@@ -36,14 +38,14 @@ class TasksController < ApplicationController
 
   def destroy
     @task.destroy
-    redirect_to tasks_url, notice: 'Task was successfully deleted.'
+    redirect_to tasks_path, notice: 'タスクが削除されました。'
   end
 
   def update_status
     if @task.update(status: params[:status])
-      redirect_to tasks_path, notice: 'Task status updated.'
+      redirect_to tasks_path, notice: 'タスクの状態が更新されました。'
     else
-      redirect_to tasks_path, alert: 'Failed to update task status.'
+      redirect_to tasks_path, alert: 'タスクの状態の更新に失敗しました。'
     end
   end
 
@@ -54,6 +56,6 @@ class TasksController < ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(:title, :content, :status, :parent_task_id)
+    params.require(:task).permit(:title, :description, :status, :due_date, :parent_task_id)
   end
 end 

@@ -1,18 +1,105 @@
-<h1>Notes</h1>
+<div class="notes-container">
+  <div class="header">
+    <h2>Notes</h2>
+    <%= render 'shared/new_button', text: 'New Note', onclick: 'showNewNoteForm()' %>
+  </div>
 
-<%= link_to 'New Note', new_note_path, class: 'button' %>
+  <div id="new-note-form" style="display: none;" class="new-note-row">
+    <%= form_with(model: Note.new, local: true, class: 'inline-form') do |f| %>
+      <div class="form-fields">
+        <%= f.text_field :title, placeholder: 'Note title', class: 'form-input' %>
+        <%= f.text_area :content, placeholder: 'Content', class: 'form-input content-area' %>
+      </div>
+      <div class="form-actions">
+        <%= f.submit 'Save', class: 'save-button' %>
+        <button type="button" onclick="hideNewNoteForm()" class="cancel-button">Cancel</button>
+      </div>
+    <% end %>
+  </div>
 
-<div class="notes-grid">
-  <% @notes.each do |note| %>
-    <div class="note-card">
-      <h3><%= link_to note.title, note_path(note) %></h3>
-      <div class="note-preview">
-        <%= note.content.to_plain_text.truncate(100) %>
-      </div>
-      <div class="note-meta">
-        <span>By <%= note.user.name %></span>
-        <span><%= time_ago_in_words(note.updated_at) %> ago</span>
-      </div>
-    </div>
-  <% end %>
-</div> 
+  <div id="notes-list">
+    <% @notes.each do |note| %>
+      <%= render note %>
+    <% end %>
+  </div>
+</div>
+
+<style>
+.notes-container {
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.new-note-row {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.inline-form {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.form-fields {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  flex-grow: 1;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.content-area {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.save-button {
+  background-color: #67c23a;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancel-button {
+  background-color: #909399;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+</style>
+
+<script>
+function showNewNoteForm() {
+  document.getElementById('new-note-form').style.display = 'block';
+}
+
+function hideNewNoteForm() {
+  document.getElementById('new-note-form').style.display = 'none';
+}
+</script> 

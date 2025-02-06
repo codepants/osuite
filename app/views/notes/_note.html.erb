@@ -1,0 +1,60 @@
+<div class="note-card">
+  <div class="note-header">
+    <h3><%= link_to note.title, note_path(note) %></h3>
+    <div class="note-meta">
+      <span class="note-date"><%= time_ago_in_words(note.updated_at) %> ago</span>
+    </div>
+  </div>
+  
+  <div class="note-preview">
+    <%= truncate(note.content.to_plain_text, length: 200) if note.content.present? %>
+  </div>
+</div>
+
+<style>
+.note-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.note-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.note-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.note-header h3 a {
+  color: #333;
+  text-decoration: none;
+}
+
+.note-header h3 a:hover {
+  color: #4a90e2;
+}
+
+.note-meta {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.note-preview {
+  color: #666;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+</style> 

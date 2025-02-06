@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   def require_admin!
     unless current_user&.admin?
       flash[:alert] = 'Access denied'
-      redirect_to root_path
+      redirect_to dashboard_path
     end
   end
 end

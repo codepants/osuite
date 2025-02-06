@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_02_06_114500) do
+ActiveRecord::Schema[8.0].define(version: 2025_02_07_131100) do
   create_table "action_text_rich_texts", force: :cascade do |t|
     t.string "name", null: false
     t.text "body"
@@ -78,6 +78,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_06_114500) do
     t.json "schema"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -87,6 +88,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_02_06_114500) do
     t.integer "parent_task_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "description"
+    t.datetime "due_date"
+    t.index ["due_date"], name: "index_tasks_on_due_date"
     t.index ["parent_task_id"], name: "index_tasks_on_parent_task_id"
     t.index ["user_id"], name: "index_tasks_on_user_id"
   end

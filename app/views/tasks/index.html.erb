@@ -1,25 +1,221 @@
-<h1>Tasks</h1>
+<div class="tasks-container">
+  <div class="header">
+    <h2>
+      <span class="jp">課題一覧</span>
+      <span class="en-sub">Tasks</span>
+    </h2>
+    <%= render 'shared/new_button', text: '新規作成', onclick: 'showNewTaskForm()' %>
+  </div>
 
-<%= link_to 'New Task', new_task_path, class: 'button' %>
-
-<div class="tasks-list">
-  <% @tasks.group_by(&:status).each do |status, tasks| %>
-    <div class="status-column">
-      <h2><%= status.titleize %></h2>
-      <% tasks.each do |task| %>
-        <div class="task-card">
-          <h3><%= link_to task.title, task_path(task) %></h3>
-          <div class="task-content">
-            <%= task.content.to_plain_text.truncate(100) %>
-          </div>
-          <div class="task-meta">
-            <span>By <%= task.user.name %></span>
-            <%= form_with(model: task, url: update_status_task_path(task), method: :patch) do |f| %>
-              <%= f.select :status, %w[pending in_progress completed], {}, { onchange: 'this.form.submit()' } %>
+  <div id="new-task-form" style="display: <%= @task&.errors&.any? ? 'block' : 'none' %>;" class="new-task-row">
+    <%= form_with(model: @task || Task.new, local: true, class: 'inline-form') do |f| %>
+      <% if @task&.errors&.any? %>
+        <div class="error-messages">
+          <h3>
+            <span class="jp"><%= pluralize(@task.errors.count, '件') %>のエラーが発生しました：</span>
+            <span class="en-sub"><%= pluralize(@task.errors.count, 'error') %> prohibited this task from being saved:</span>
+          </h3>
+          <ul>
+            <% @task.errors.full_messages.each do |msg| %>
+              <li><%= msg %></li>
             <% end %>
-          </div>
+          </ul>
         </div>
       <% end %>
-    </div>
-  <% end %>
-</div> 
+
+      <div class="form-fields">
+        <div class="field">
+          <%= f.label :title do %>
+            <span class="jp">件名</span>
+            <span class="en-sub">Title</span>
+          <% end %>
+          <%= f.text_field :title, class: 'form-input' %>
+        </div>
+
+        <div class="field">
+          <%= f.label :description do %>
+            <span class="jp">詳細</span>
+            <span class="en-sub">Description</span>
+          <% end %>
+          <%= f.text_area :description, class: 'form-input' %>
+        </div>
+
+        <div class="field">
+          <%= f.label :status do %>
+            <span class="jp">状況</span>
+            <span class="en-sub">Status</span>
+          <% end %>
+          <%= f.select :status, 
+              [
+                ['未着手', 'pending'],
+                ['作業中', 'in_progress'],
+                ['完了済', 'completed']
+              ],
+              { selected: 'pending' },
+              class: 'form-input' %>
+        </div>
+
+        <div class="field">
+          <%= f.label :due_date do %>
+            <span class="jp">期限日時</span>
+            <span class="en-sub">Due Date</span>
+          <% end %>
+          <%= f.datetime_local_field :due_date, class: 'form-input' %>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <%= f.submit class: 'save-button' do %>
+          <span class="jp">保存</span>
+          <span class="en-sub">Save</span>
+        <% end %>
+        <button type="button" onclick="hideNewTaskForm()" class="cancel-button">
+          <span class="jp">取消</span>
+          <span class="en-sub">Cancel</span>
+        </button>
+      </div>
+    <% end %>
+  </div>
+
+  <div id="tasks-list">
+    <% @tasks.each do |task| %>
+      <%= render task %>
+    <% end %>
+  </div>
+</div>
+
+<style>
+.tasks-container {
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.new-task-row {
+  background-color: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.inline-form {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.form-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  flex-grow: 1;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.save-button {
+  background-color: #67c23a;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancel-button {
+  background-color: #909399;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.jp {
+  display: inline-block;
+}
+
+.en-sub {
+  display: inline-block;
+  font-size: 10px;
+  color: #666;
+  margin-left: 4px;
+  vertical-align: top;
+}
+
+body[data-language="JP"] .en-sub {
+  display: none;
+}
+
+body[data-language="JPE"] .en-sub {
+  display: inline-block;
+}
+
+body[data-language="ENG"] .jp {
+  display: none;
+}
+
+body[data-language="ENG"] .en-sub {
+  font-size: 1rem;
+  color: inherit;
+  margin-left: 0;
+}
+
+.error-messages {
+  background-color: #fef0f0;
+  border: 1px solid #fde2e2;
+  border-radius: 4px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.error-messages h3 {
+  color: #f56c6c;
+  font-size: 1rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.error-messages ul {
+  color: #f56c6c;
+  margin: 0;
+  padding-left: 1.5rem;
+}
+</style>
+
+<script>
+function showNewTaskForm() {
+  document.getElementById('new-task-form').style.display = 'block';
+}
+
+function hideNewTaskForm() {
+  document.getElementById('new-task-form').style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const savedLanguage = localStorage.getItem('language') || 'JPE';
+  document.body.setAttribute('data-language', savedLanguage);
+});
+</script> 

@@ -25,21 +25,54 @@
   <body>
     <% if current_user %>
       <nav class="main-nav">
-        <%= link_to 'Dashboard', dashboard_path, class: 'nav-tab dashboard-tab' %>
-        <%= link_to 'Notes', notes_path, class: 'nav-tab notes-tab' %>
-        <%= link_to 'Tasks', tasks_path, class: 'nav-tab tasks-tab' %>
-        <%= link_to 'Wiki', wiki_pages_path, class: 'nav-tab wiki-tab' %>
-        <%= link_to 'SimpleBase', simplebase_tables_path, class: 'nav-tab simplebase-tab' %>
-        <%= link_to 'Chat', chat_messages_path, class: 'nav-tab chat-tab' %>
-        <% if current_user.admin? %>
-          <%= link_to 'Users', users_path, class: 'nav-tab users-tab' %>
+        <%= link_to dashboard_path, class: 'nav-tab dashboard-tab' do %>
+          <span class="jp">統計表示</span>
+          <span class="en-sub">Dashboard</span>
         <% end %>
+        
+        <%= link_to notes_path, class: 'nav-tab notes-tab' do %>
+          <span class="jp">備考録</span>
+          <span class="en-sub">Notes</span>
+        <% end %>
+        
+        <%= link_to tasks_path, class: 'nav-tab tasks-tab' do %>
+          <span class="jp">課題管理</span>
+          <span class="en-sub">Tasks</span>
+        <% end %>
+        
+        <%= link_to wiki_pages_path, class: 'nav-tab wiki-tab' do %>
+          <span class="jp">知識庫</span>
+          <span class="en-sub">Wiki</span>
+        <% end %>
+        
+        <%= link_to simplebase_tables_path, class: 'nav-tab simplebase-tab' do %>
+          <span class="jp">情報管理</span>
+          <span class="en-sub">SimpleBase</span>
+        <% end %>
+        
+        <%= link_to chat_messages_path, class: 'nav-tab chat-tab' do %>
+          <span class="jp">対話室</span>
+          <span class="en-sub">Chat</span>
+        <% end %>
+        
+        <% if current_user.admin? %>
+          <%= link_to users_path, class: 'nav-tab users-tab' do %>
+            <span class="jp">利用者</span>
+            <span class="en-sub">Users</span>
+          <% end %>
+        <% end %>
+        
         <div class="nav-right">
           <span class="user-info">
-            Logged in as: <%= current_user.name %>
-            <%= '(Admin)' if current_user.admin? %>
+            <span class="jp">ユーザー：</span>
+            <span class="en-sub">User:</span>
+            <%= current_user.name %>
+            <%= '(管理者)' if current_user.admin? %>
           </span>
-          <%= button_to 'Logout', logout_path, method: :delete, class: 'nav-tab logout-tab' %>
+          <%= button_to logout_path, method: :delete, class: 'nav-tab logout-tab' do %>
+            <span class="jp">終了</span>
+            <span class="en-sub">Logout</span>
+          <% end %>
         </div>
       </nav>
 
@@ -72,6 +105,7 @@
           color: white;
           font-weight: 500;
           transition: all 0.2s;
+          font-size: 0.875rem;  /* 2px smaller than default */
         }
 
         .nav-tab:hover {
@@ -90,6 +124,36 @@
           background-color: #dc3545;
           border: none;
           cursor: pointer;
+        }
+
+        .jp {
+          display: inline-block;
+        }
+
+        .en-sub {
+          display: inline-block;
+          font-size: 8px;  /* 2px smaller than before */
+          color: rgba(255, 255, 255, 0.8);
+          margin-left: 4px;
+          vertical-align: top;
+        }
+
+        body[data-language="JP"] .en-sub {
+          display: none;
+        }
+
+        body[data-language="JPE"] .en-sub {
+          display: inline-block;
+        }
+
+        body[data-language="ENG"] .jp {
+          display: none;
+        }
+
+        body[data-language="ENG"] .en-sub {
+          font-size: 0.875rem;  /* Same as main text when in English mode */
+          color: white;
+          margin-left: 0;
         }
       </style>
     <% end %>

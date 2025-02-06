@@ -1,0 +1,36 @@
+<button onclick="<%= onclick %>" class="new-button">
+  <span class="plus-sign">+</span>
+  <span class="button-text"><%= text %></span>
+</button>
+
+<style>
+.new-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #67c23a;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.new-button:hover {
+  filter: brightness(110%);
+  transform: translateY(-1px);
+}
+
+.plus-sign {
+  font-size: 1.5rem;
+  font-weight: bold;
+  line-height: 1;
+}
+
+.button-text {
+  font-weight: 500;
+}
+</style> 

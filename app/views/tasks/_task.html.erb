@@ -1,0 +1,141 @@
+<div class="task-card">
+  <div class="task-header">
+    <h3><%= link_to task.title, task_path(task) %></h3>
+    <div class="task-meta">
+      <span class="task-date">
+        <span class="jp">更新：<%= time_ago_in_words(task.updated_at) %>前</span>
+        <span class="en-sub">Updated: <%= time_ago_in_words(task.updated_at) %> ago</span>
+      </span>
+      <span class="task-status <%= task.status %>">
+        <% status_text = {
+          'pending' => '未着手',
+          'in_progress' => '作業中',
+          'completed' => '完了済'
+        } %>
+        <span class="jp"><%= status_text[task.status] %></span>
+        <span class="en-sub"><%= task.status.humanize %></span>
+      </span>
+      <% if task.due_date %>
+        <span class="task-due-date">
+          <span class="jp">期限：<%= l task.due_date, format: :long %></span>
+          <span class="en-sub">Due: <%= task.due_date.strftime("%b %d %H:%M") %></span>
+        </span>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="task-preview">
+    <%= truncate(task.description, length: 200) if task.description.present? %>
+  </div>
+</div>
+
+<style>
+.task-card {
+  background: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.task-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.task-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+
+.task-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.task-header h3 a {
+  color: #333;
+  text-decoration: none;
+}
+
+.task-header h3 a:hover {
+  color: #e6a23c;
+}
+
+.task-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.task-status {
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.task-status.pending {
+  background-color: #fdf6ec;
+  color: #e6a23c;
+}
+
+.task-status.in_progress {
+  background-color: #ecf5ff;
+  color: #409eff;
+}
+
+.task-status.completed {
+  background-color: #f0f9eb;
+  color: #67c23a;
+}
+
+.task-preview {
+  color: #666;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+}
+
+.task-due-date {
+  color: #f56c6c;
+  font-weight: 500;
+}
+
+.task-meta span {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.jp {
+  display: inline-block;
+}
+
+.en-sub {
+  display: inline-block;
+  font-size: 10px;
+  color: #666;
+  margin-left: 4px;
+  vertical-align: top;
+}
+
+body[data-language="JP"] .en-sub {
+  display: none;
+}
+
+body[data-language="JPE"] .en-sub {
+  display: inline-block;
+}
+
+body[data-language="ENG"] .jp {
+  display: none;
+}
+
+body[data-language="ENG"] .en-sub {
+  font-size: inherit;
+  color: inherit;
+  margin-left: 0;
+}
+</style> 
