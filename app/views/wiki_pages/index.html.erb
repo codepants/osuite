@@ -1,0 +1,25 @@
+<h1>Wiki Pages</h1>
+
+<%= link_to 'New Wiki Page', new_wiki_page_path, class: 'button' %>
+
+<div class="search-form">
+  <%= form_with(url: search_wiki_pages_path, method: :get, local: true) do |f| %>
+    <%= f.text_field :q, placeholder: 'Search wiki pages...' %>
+    <%= f.submit 'Search' %>
+  <% end %>
+</div>
+
+<div class="wiki-pages-list">
+  <% @wiki_pages.each do |page| %>
+    <div class="wiki-page-card">
+      <h3><%= link_to page.title, wiki_page_path(page) %></h3>
+      <div class="page-preview">
+        <%= page.content.to_plain_text.truncate(100) %>
+      </div>
+      <div class="page-meta">
+        <span>By <%= page.user.name %></span>
+        <span><%= time_ago_in_words(page.updated_at) %> ago</span>
+      </div>
+    </div>
+  <% end %>
+</div> 

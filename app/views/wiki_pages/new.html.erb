@@ -1,0 +1,161 @@
+<div class="wiki-container">
+  <h2>
+    <span class="jp">新規ウィキページ</span>
+    <span class="en-sub">New Wiki Page</span>
+  </h2>
+
+  <%= form_with(model: @wiki_page, local: true) do |f| %>
+    <% if @wiki_page.errors.any? %>
+      <div class="error-messages">
+        <h3>
+          <span class="jp"><%= pluralize(@wiki_page.errors.count, 'つのエラー') %>が発生しました：</span>
+          <span class="en-sub"><%= pluralize(@wiki_page.errors.count, 'error') %> prohibited this page from being saved:</span>
+        </h3>
+        <ul>
+          <% @wiki_page.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <div class="field">
+      <%= f.label :title do %>
+        <span class="jp">タイトル</span>
+        <span class="en-sub">Title</span>
+      <% end %>
+      <%= f.text_field :title, class: 'form-input' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :content do %>
+        <span class="jp">内容</span>
+        <span class="en-sub">Content</span>
+      <% end %>
+      <%= f.rich_text_area :content, class: 'trix-content' %>
+    </div>
+
+    <div class="field">
+      <%= f.label :parent_id do %>
+        <span class="jp">親ページ</span>
+        <span class="en-sub">Parent Page</span>
+      <% end %>
+      <%= f.collection_select :parent_id, WikiPage.all, :id, :title, { include_blank: true }, class: 'form-input' %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit class: 'wiki-button' do %>
+        <span class="jp">保存</span>
+        <span class="en-sub">Save</span>
+      <% end %>
+      <%= link_to wiki_pages_path, class: 'cancel-button' do %>
+        <span class="jp">キャンセル</span>
+        <span class="en-sub">Cancel</span>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<style>
+.wiki-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #f56c6c15;
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.field {
+  margin-bottom: 1.5rem;
+}
+
+.form-input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.trix-content {
+  min-height: 300px;
+  background: white;
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.error-messages {
+  color: #f56c6c;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border: 1px solid #f56c6c;
+  border-radius: 4px;
+  background-color: #fff5f5;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.wiki-button {
+  background-color: #f56c6c;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.wiki-button:hover {
+  filter: brightness(110%);
+}
+
+.cancel-button {
+  background-color: #909399;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+
+.cancel-button:hover {
+  filter: brightness(110%);
+}
+
+.jp {
+  display: inline-block;
+}
+
+.en-sub {
+  display: inline-block;
+  font-size: 10px;
+  color: #666;
+  margin-left: 4px;
+  vertical-align: top;
+}
+
+body[data-language="JP"] .en-sub {
+  display: none;
+}
+
+body[data-language="JPE"] .en-sub {
+  display: inline-block;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const savedLanguage = localStorage.getItem('language') || 'JPE';
+  document.body.setAttribute('data-language', savedLanguage);
+});
+</script> 

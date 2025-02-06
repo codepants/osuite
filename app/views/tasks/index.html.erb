@@ -1,0 +1,25 @@
+<h1>Tasks</h1>
+
+<%= link_to 'New Task', new_task_path, class: 'button' %>
+
+<div class="tasks-list">
+  <% @tasks.group_by(&:status).each do |status, tasks| %>
+    <div class="status-column">
+      <h2><%= status.titleize %></h2>
+      <% tasks.each do |task| %>
+        <div class="task-card">
+          <h3><%= link_to task.title, task_path(task) %></h3>
+          <div class="task-content">
+            <%= task.content.to_plain_text.truncate(100) %>
+          </div>
+          <div class="task-meta">
+            <span>By <%= task.user.name %></span>
+            <%= form_with(model: task, url: update_status_task_path(task), method: :patch) do |f| %>
+              <%= f.select :status, %w[pending in_progress completed], {}, { onchange: 'this.form.submit()' } %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div> 

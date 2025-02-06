@@ -1,0 +1,18 @@
+<h1>SimpleBase Tables</h1>
+
+<%= link_to 'New Table', new_simplebase_table_path, class: 'button' %>
+
+<div class="tables-list">
+  <% @tables.each do |table| %>
+    <div class="table-card">
+      <h3><%= link_to table.name, simplebase_table_records_path(table) %></h3>
+      <div class="schema-preview">
+        <strong>Schema:</strong>
+        <%= table.schema.keys.join(', ') %>
+      </div>
+      <div class="table-meta">
+        <span><%= pluralize(table.records.count, 'record') %></span>
+      </div>
+    </div>
+  <% end %>
+</div> 

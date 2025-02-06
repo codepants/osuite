@@ -1,0 +1,18 @@
+<h1>Notes</h1>
+
+<%= link_to 'New Note', new_note_path, class: 'button' %>
+
+<div class="notes-grid">
+  <% @notes.each do |note| %>
+    <div class="note-card">
+      <h3><%= link_to note.title, note_path(note) %></h3>
+      <div class="note-preview">
+        <%= note.content.to_plain_text.truncate(100) %>
+      </div>
+      <div class="note-meta">
+        <span>By <%= note.user.name %></span>
+        <span><%= time_ago_in_words(note.updated_at) %> ago</span>
+      </div>
+    </div>
+  <% end %>
+</div> 

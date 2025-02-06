@@ -1,0 +1,255 @@
+<div class="login-page-container">
+  <div class="language-selector">
+    <select id="language" class="form-input" onchange="updateLanguage(this.value)">
+      <option value="JPE" selected>Japanese (English sub)</option>
+      <option value="JP">Japanese</option>
+      <option value="ENG" disabled>English (n.a.)</option>
+    </select>
+  </div>
+
+  <div class="login-box">
+    <h2>
+      <span class="jp">ログイン</span>
+      <span class="en-sub">Login</span>
+    </h2>
+
+    <%= form_with(url: login_path, local: true, class: 'login-form') do |f| %>
+      <div class="field">
+        <%= f.label :email do %>
+          <span class="jp">メールアドレス</span>
+          <span class="en-sub">Email</span>
+        <% end %>
+        <%= f.email_field :email, autofocus: true, class: 'form-input' %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password do %>
+          <span class="jp">パスワード</span>
+          <span class="en-sub">Password</span>
+        <% end %>
+        <%= f.password_field :password, class: 'form-input' %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit class: 'login-button' do %>
+          <span class="jp">ログイン</span>
+          <span class="en-sub">Log in</span>
+        <% end %>
+        <button type="button" class="forgot-password-button" onclick="showForgotPasswordPopup()">
+          <span class="jp">パスワードをお忘れの方</span>
+          <span class="en-sub">Forgot Password?</span>
+        </button>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<div id="forgotPasswordPopup" class="popup-overlay" style="display: none;">
+  <div class="popup-content">
+    <h3>
+      <span class="jp">パスワードリセットリンク</span>
+      <span class="en-sub">Password Reset Link</span>
+    </h3>
+    <p>
+      <span class="jp">パスワードリセット用のマジックリンクが生成されました。</span>
+      <span class="en-sub">A magic link has been generated for password reset.</span>
+    </p>
+    <p>
+      <span class="jp">デモ用に以下のリンクをクリックしてください：</span>
+      <span class="en-sub">For demo purposes, click the link below:</span>
+    </p>
+    <%= link_to reset_password_path(token: SecureRandom.urlsafe_base64), class: 'magic-link' do %>
+      <span class="jp">パスワードをリセット</span>
+      <span class="en-sub">Reset Password</span>
+    <% end %>
+    <button onclick="closePopup()" class="close-button">
+      <span class="jp">閉じる</span>
+      <span class="en-sub">Close</span>
+    </button>
+  </div>
+</div>
+
+<style>
+.login-page-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.login-box {
+  background-color: #e6f3ff;
+  width: 40vw;
+  height: 30vh;
+  border-radius: 15px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.login-button {
+  background-color: #4a90e2;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.login-button:hover {
+  background-color: #357abd;
+}
+
+.forgot-password-button {
+  background-color: transparent;
+  color: #666;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.forgot-password-button:hover {
+  background-color: #f0f0f0;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  max-width: 400px;
+}
+
+.magic-link {
+  display: inline-block;
+  margin: 1rem 0;
+  padding: 0.5rem 1rem;
+  background-color: #4a90e2;
+  color: white;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.magic-link:hover {
+  background-color: #357abd;
+}
+
+.close-button {
+  background-color: #666;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.nav-tab {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s;
+  border: none;
+  color: white;
+}
+
+.nav-tab:hover {
+  filter: brightness(90%);
+}
+
+.language-selector {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+}
+
+.jp {
+  display: inline-block;
+}
+
+.en-sub {
+  display: inline-block;
+  font-size: 10px;
+  color: #666;
+  margin-left: 4px;
+  vertical-align: top;
+}
+
+/* Language specific display rules */
+body[data-language="JP"] .en-sub {
+  display: none;
+}
+
+body[data-language="JPE"] .en-sub {
+  display: inline-block;
+}
+</style>
+
+<script>
+function showForgotPasswordPopup() {
+  document.getElementById('forgotPasswordPopup').style.display = 'flex';
+}
+
+function closePopup() {
+  document.getElementById('forgotPasswordPopup').style.display = 'none';
+}
+
+function updateLanguage(value) {
+  document.body.setAttribute('data-language', value);
+  localStorage.setItem('language', value);
+}
+
+// Set initial language
+document.addEventListener('DOMContentLoaded', function() {
+  const savedLanguage = localStorage.getItem('language') || 'JPE';
+  document.getElementById('language').value = savedLanguage;
+  updateLanguage(savedLanguage);
+});
+</script> 

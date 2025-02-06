@@ -1,0 +1,14 @@
+<div class="chat-container">
+  <div class="messages" data-controller="chat-scroll">
+    <% @messages.each do |message| %>
+      <%= render 'message', message: message %>
+    <% end %>
+  </div>
+
+  <%= form_with(model: ChatMessage.new, class: 'message-form') do |f| %>
+    <%= f.text_area :content, placeholder: 'Type your message...', rows: 3 %>
+    <%= f.submit 'Send' %>
+  <% end %>
+</div>
+
+<%= turbo_stream_from "chat_room" %> 

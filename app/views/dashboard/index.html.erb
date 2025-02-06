@@ -1,0 +1,70 @@
+<div class="dashboard-container">
+  <% if current_user %>
+    <h1>Welcome, <%= current_user.name %></h1>
+    
+    <div class="dashboard-grid">
+      <div class="dashboard-section">
+        <h2>Recent Notes</h2>
+        <% if @recent_notes.any? %>
+          <ul class="dashboard-list">
+            <% @recent_notes.each do |note| %>
+              <li><%= link_to note.title, note_path(note) %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p>No notes yet. <%= link_to 'Create one', new_note_path %>?</p>
+        <% end %>
+      </div>
+
+      <div class="dashboard-section">
+        <h2>Pending Tasks</h2>
+        <% if @pending_tasks.any? %>
+          <ul class="dashboard-list">
+            <% @pending_tasks.each do |task| %>
+              <li><%= link_to task.title, task_path(task) %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p>No pending tasks. <%= link_to 'Create one', new_task_path %>?</p>
+        <% end %>
+      </div>
+
+      <div class="dashboard-section">
+        <h2>Recent Wiki Pages</h2>
+        <% if @recent_wiki_pages.any? %>
+          <ul class="dashboard-list">
+            <% @recent_wiki_pages.each do |page| %>
+              <li><%= link_to page.title, wiki_page_path(page) %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <p>No wiki pages yet. <%= link_to 'Create one', new_wiki_page_path %>?</p>
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <div class="welcome-section">
+      <h1>Welcome to OSuite</h1>
+      
+      <div class="intro-text">
+        <p>
+          OSuite is your comprehensive workspace solution, bringing together essential tools 
+          for collaboration and productivity. With integrated note-taking, task management, 
+          and wiki functionality, it's designed to streamline your team's workflow and 
+          enhance communication.
+        </p>
+
+        <p>
+          Whether you're documenting ideas, managing projects, or building a knowledge base, 
+          OSuite provides the tools you need in one unified platform. Experience the power 
+          of seamless integration and real-time collaboration with our intuitive interface 
+          and robust feature set.
+        </p>
+      </div>
+
+      <div class="login-prompt">
+        <%= link_to 'Login to Get Started', login_path, class: 'button primary' %>
+      </div>
+    </div>
+  <% end %>
+</div> 

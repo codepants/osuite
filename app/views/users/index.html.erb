@@ -1,0 +1,207 @@
+<div class="users-container">
+  <div class="header-actions">
+    <h1>Users Management</h1>
+    <button onclick="openModal('new-user-modal')" class="button primary">
+      <i class="fas fa-plus"></i> New User
+    </button>
+  </div>
+
+  <table class="users-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Created</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.name %></td>
+          <td><%= user.email %></td>
+          <td><%= user.admin? ? 'Admin' : 'User' %></td>
+          <td><%= user.created_at.strftime('%Y-%m-%d') %></td>
+          <td class="actions">
+            <button onclick="openEditModal('<%= user.id %>')" class="button small">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <% unless user == current_user %>
+              <%= button_to user_path(user), 
+                    method: :delete, 
+                    class: "button small danger",
+                    data: { confirm: "Are you sure you want to delete #{user.name}?" } do %>
+                <i class="fas fa-trash"></i> Delete
+              <% end %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<!-- New User Modal -->
+<div id="new-user-modal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal('new-user-modal')">&times;</span>
+    <h2>New User</h2>
+    <%= form_with(model: User.new, local: true, class: 'user-form') do |f| %>
+      <div class="field">
+        <%= f.label :name %>
+        <%= f.text_field :name, required: true %>
+      </div>
+
+      <div class="field">
+        <%= f.label :email %>
+        <%= f.email_field :email, required: true %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password %>
+        <%= f.password_field :password, required: true %>
+      </div>
+
+      <div class="field">
+        <%= f.label :password_confirmation %>
+        <%= f.password_field :password_confirmation, required: true %>
+      </div>
+
+      <div class="field checkbox">
+        <%= f.label :admin do %>
+          <%= f.check_box :admin %>
+          Administrator
+        <% end %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit 'Create User', class: 'button primary' %>
+        <button type="button" onclick="closeModal('new-user-modal')" class="button">Cancel</button>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<!-- Edit User Modal Template -->
+<% @users.each do |user| %>
+  <div id="edit-user-modal-<%= user.id %>" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal('edit-user-modal-<%= user.id %>')">&times;</span>
+      <h2>Edit User: <%= user.name %></h2>
+      <%= form_with(model: user, local: true, class: 'user-form') do |f| %>
+        <div class="field">
+          <%= f.label :name %>
+          <%= f.text_field :name, required: true %>
+        </div>
+
+        <div class="field">
+          <%= f.label :email %>
+          <%= f.email_field :email, required: true %>
+        </div>
+
+        <div class="field">
+          <%= f.label :password %> <span class="hint">(leave blank if no change)</span>
+          <%= f.password_field :password %>
+        </div>
+
+        <div class="field">
+          <%= f.label :password_confirmation %>
+          <%= f.password_field :password_confirmation %>
+        </div>
+
+        <div class="field checkbox">
+          <%= f.label :admin do %>
+            <%= f.check_box :admin %>
+            Administrator
+          <% end %>
+        </div>
+
+        <div class="actions">
+          <%= f.submit 'Update User', class: 'button primary' %>
+          <button type="button" onclick="closeModal('edit-user-modal-<%= user.id %>')" class="button">Cancel</button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<% content_for :head do %>
+  <style>
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 8px;
+    }
+
+    .close {
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .users-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    .users-table th,
+    .users-table td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .field {
+      margin-bottom: 15px;
+    }
+
+    .hint {
+      font-size: 0.8em;
+      color: #666;
+    }
+  </style>
+
+  <script>
+    function openModal(modalId) {
+      document.getElementById(modalId).style.display = 'block';
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
+
+    function openEditModal(userId) {
+      openModal(`edit-user-modal-${userId}`);
+    }
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      if (event.target.classList.contains('modal')) {
+        event.target.style.display = 'none';
+      }
+    }
+  </script>
+<% end %> 
